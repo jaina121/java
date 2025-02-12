@@ -1,0 +1,95 @@
+import java.util.Locale;
+
+public class Book {
+    public String title;
+    public String author;
+    public int yearPublished;
+
+    public Book(String title, String author, int yearPublished) {
+        this.title = title;
+        this.author = author;
+        this.yearPublished = yearPublished;
+    }
+    public String getBookInfo() {
+        return "Title: " + title + "\nAuthor: " + author + "\nYear Published: " + yearPublished;
+    }
+    public void printBookDetails() {
+        System.out.println(getBookInfo());
+    }
+}
+class PrintedBook extends Book {
+    private int numberOfPages;
+    private String publisher;
+
+
+    public PrintedBook(String title, String author, int yearPublished, int numberOfPages, String publisher) {
+        super(title, author, yearPublished);
+        this.numberOfPages = numberOfPages;
+        this.publisher = publisher;
+    }
+
+
+    @Override
+    public String getBookInfo() {
+        return super.getBookInfo() + "\nPublisher: " + publisher + "\nNumber of Pages: " + numberOfPages;
+    }
+
+
+    @Override
+    public void printBookDetails() {
+        System.out.println(getBookInfo());
+    }
+
+
+    public void printBook() {
+        System.out.println("Printing the book...");
+    }
+}
+class Ebook extends Book {
+    private double fileSizeMB;
+    private String fileFormat;
+    private int price;
+
+    public Ebook(String title, String author, int yearPublished, double fileSizeMB, String fileFormat,int price) {
+        super(title, author, yearPublished);
+        this.fileSizeMB = fileSizeMB;
+        this.fileFormat = fileFormat;
+        this.price = price;
+
+    }
+    @Override
+    public String getBookInfo() {
+        return super.getBookInfo() + "\nFile Size: " + fileSizeMB + " MB\nFile Format: " + fileFormat+"price $" + price ;
+    }
+
+    @Override
+    public void printBookDetails() {
+        System.out.println(getBookInfo());
+    }
+
+    public void printBook() {
+        System.out.println("This is an ebook.");
+    }
+}
+class Test{
+    public static void main(String[] args){
+        PrintedBook printedBook = new PrintedBook("Jaina", "joodonbek", 1925, 218, "Asan");
+        Ebook eBook = new Ebook("pl", "John ", 2020, 4.8, "PDF",65
+        );
+
+
+
+
+        System.out.println("Printed Book Info:");
+        printedBook.printBookDetails();
+        printedBook.printBook();
+
+        System.out.println("\nEBook Info:");
+        eBook.printBookDetails();
+        eBook.printBook();
+    }
+
+}
+
+
+

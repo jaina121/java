@@ -1,0 +1,176 @@
+import java.util.*;
+
+class Student {
+    private int id;
+    private String name;
+    private int age;
+    private Set<String> courses;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Set<String> getCourses() {
+        return courses;
+    }
+
+    public void addCourse(String course) {
+        courses.add(course);
+    }
+
+    public void removeCourse(String course) {
+        courses.remove(course);
+    }
+
+
+    public void setCourses(Set<String> courses) {
+        this.courses = courses;
+    }
+
+    public Student(int id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.courses = new HashSet<>();
+    }
+
+
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Name: " + name + ", Age: " + age + ", Courses: " + courses;
+    }
+}
+
+class StudentManager {
+    private Map<Integer, Student> students;  // Хранение студентов по id
+    private Map<String, Set<Student>> courseMap;  // Поиск студентов по курсу
+
+    public StudentManager() {
+        students = new HashMap<>();
+        courseMap = new HashMap<>();
+    }
+
+    public void addStudent(Student student) {
+        students.put(student.getId(), student);
+        for (String course : student.getCourses()) {
+            courseMap.computeIfAbsent(course, k -> new HashSet<>()).add(student);
+        }
+    }
+
+    public void removeStudent(int id) {
+        Student student = students.remove(id);
+        if (student != null) {
+            for (String course : student.getCourses()) {
+                Set<Student> studentsInCourse = courseMap.get(course);
+                if (studentsInCourse != null) {
+                    studentsInCourse.remove(student);
+                    if (studentsInCourse.isEmpty()) {
+                        courseMap.remove(course);
+                    }
+                }
+            }
+        }
+    }
+
+    public void updateStudent(int id, String name, int age, Set<String> courses) {
+        Student student = students.get(id);
+        if (student != null) {
+            student.setName(name);
+            student.setAge(age);
+            for (String course : student.getCourses()) {
+                Set<Student> studentsInCourse = courseMap.get(course);
+                if (studentsInCourse != null) {
+                    studentsInCourse.remove(student);
+                    if (studentsInCourse.isEmpty()) {
+                        courseMap.remove(course);
+                    }
+                }
+            }
+            student.getCourses().clear();
+            for (String course : courses) {
+                student.addCourse(course);
+                courseMap.computeIfAbsent(course, k -> new HashSet<>()).add(student);
+            }
+        }
+    }
+
+    public void printAllStudents() {
+        students.values().stream()
+                .sorted(Comparator.comparingInt(Student::getId))
+                .forEach(System.out::println);
+    }
+
+    public void findStudentById(int id) {
+        Student student = students.get(id);
+        if (student != null) {
+            System.out.println(student);
+        } else {
+            System.out.println("Student not found");
+        }
+    }
+
+    public void findStudentsByCourse(String course) {
+        Set<Student> studentsInCourse = courseMap.getOrDefault(course, Collections.emptySet());
+        if (studentsInCourse.isEmpty()) {
+            System.out.println("No students found for the course: " + course);
+        } else {
+            studentsInCourse.forEach(System.out::println);
+        }
+    }
+}
+
+class StudentSystem {
+    public static void main(String[] args) {
+        StudentManager manager = new StudentManager();
+
+        Student s1 = new Student(1, "Jaina", 20);
+        Student s2 = new Student(3, "Nazima", 19);
+        Student s3 = new Student(4, "asan", 43);
+
+        s1.addCourse("Java Programming");
+        s1.addCourse("Web Development");
+        s2.addCourse("Java Programming");
+        s3.addCourse("Discrate Math");
+        s3.addCourse("Java Programming");
+
+        manager.addStudent(s1);
+        manager.addStudent(s2);
+        manager.addStudent(s3);
+
+        System.out.println("All students:");
+        manager.printAllStudents();
+
+        System.out.println("\nFind student with ID 2:");
+        manager.findStudentById(2);
+
+        System.out.println("\nStudents in Java Programming course:");
+        manager.findStudentsByCourse("Java Programming");
+
+        Set<String> newCourses = new HashSet<>(Arrays.asList("Cloud Computing", "Java Programming"));
+        manager.updateStudent(1, "Jaina Updated", 21, newCourses);
+
+        System.out.println("\nUpdated student with ID 1:");
+        manager.printAllStudents();
+
+        manager.removeStudent(3);
+
+        System.out.println("\nAll students after removing student with ID 3:");
+        manager.printAllStudents();
+    }
+}

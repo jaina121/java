@@ -1,0 +1,42 @@
+import java.util.NavigableSet;
+import java.util.TreeMap;
+
+public class TreeMapExercises {
+    public static void main(String[] args) {
+        // Создание TreeMap и добавление элементов
+        TreeMap<Integer, String> treeMap = new TreeMap<>();
+        treeMap.put(1, "Красный");
+        treeMap.put(3, "Зелёный");
+        treeMap.put(5, "Синий");
+        treeMap.put(2, "Жёлтый");
+        treeMap.put(4, "Фиолетовый");
+
+        System.out.println( treeMap);
+
+        // 1. Получить представление ключей в обратном порядке
+        System.out.println("\nОбратный порядок ключей:");
+        NavigableSet<Integer> reverseKeySet = treeMap.navigableKeySet();
+        System.out.println("Обратный порядок ключей: " + reverseKeySet.descendingSet());
+
+        // 2. Получить наибольший ключ, меньший или равный заданному ключу
+        int keyToFind = 3;
+        Integer greatestKeyLessThanOrEqual = treeMap.floorKey(keyToFind);
+        System.out.println("\nНаибольший ключ, меньший или равный " + keyToFind + ": " + greatestKeyLessThanOrEqual);
+
+        // 3. Получить наименьший ключ, строго больший, чем заданный ключ
+        Integer leastKeyGreaterThan = treeMap.higherKey(keyToFind);
+        System.out.println("\nНаименьший ключ, строго больший, чем " + keyToFind + ": " + leastKeyGreaterThan);
+
+        // 4. Получить представление NavigableSet ключей
+        NavigableSet<Integer> navigableSet = treeMap.navigableKeySet();
+        System.out.println("\nNavigableSet ключей: " + navigableSet);
+
+        // 5. Получить сопоставление ключ-значение для наибольшего ключа, строго меньшего заданного
+        Integer greatestKeyLessThan = treeMap.lowerKey(keyToFind);
+        if (greatestKeyLessThan != null) {
+            System.out.println("\nСопоставление ключ-значение для наибольшего ключа, строго меньшего, чем " + keyToFind + ": " + greatestKeyLessThan + " = " + treeMap.get(greatestKeyLessThan));
+        } else {
+            System.out.println("\nНет ключа, меньшего чем " + keyToFind);
+        }
+    }
+}
